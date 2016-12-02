@@ -1,8 +1,11 @@
 // Utility
 
+    // @return bool True if saved, False if unable to save
     // ========================================================================
-    void TGA_Save32( int width, int height, void *pix, size_t len, const char *filename ) 
+    bool TGA_Save32( int width, int height, void *pix, size_t len, const char *filename )
     {
+        bool bSuccess = false;
+
         FILE *pFile = fopen( filename, "w+b" );
         if( pFile )
         {
@@ -28,9 +31,12 @@
             putc( 32, pFile ); // [16] Bits Per Pixel = 32 bit
             putc( 32, pFile ); // [17] Image Descriptor Byte: (1<<5) Origin Top Left
 
-            fwrite( pix, 1, len, pFile );
+            size_t wrote = fwrite( pix, 1, len, pFile );
+            bSuccess = wrote == len;
 
             fclose( pFile );
         }
+
+        return bSuccess;
     }
 

@@ -156,7 +156,16 @@ int main( const int nArg, const char* aArg[] )
     }
     printf( "\n" );
 
-    TGA_Save32( W, H, pixels, sizeof( pixels ), "tint16x16.tga" );
+    const char *pFilename = "tint16x16.tga";
+    bool  bSaved;
+
+    bSaved = TGA_Save32( W, H, pixels, sizeof( pixels ), pFilename );
+
+    const char *pMessage = bSaved
+        ? "Wrote"
+        : "ERROR: Couldn't write"
+        ;
+    printf( "%s: '%s'\n", pMessage, pFilename );
 
     return 0;
 }
