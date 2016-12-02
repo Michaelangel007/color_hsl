@@ -15,7 +15,7 @@
 
             putc( 0, pFile ); // [03] Color Map Specification 
             putc( 0, pFile );
-            putc( 0, pFile ); 
+            putc( 0, pFile );
             putc( 0, pFile );
             putc( 0, pFile );
 
