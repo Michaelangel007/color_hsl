@@ -191,9 +191,13 @@ void MakeCheckerboards()
     A8R8G8B8 checkerboard[ H ][ W ]; // [y][x]
     A8R8G8B8 rgb;
 
-    memset( checkerboard, 0, sizeof( checkerboard ) );
+    //memset( checkerboard, 0, sizeof( checkerboard ) );
+    for( y = 0; y < H; y++ )
+        for( x = 0; x < W; x++ )
+            checkerboard[y][x] = 0xFFFF00FF; // Hot Pink
 
     // Checkerboard: Chromatic
+    x = 0;
 
     nSat = 1.0;
 
