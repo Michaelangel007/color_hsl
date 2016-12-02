@@ -10,7 +10,7 @@
 ## 256x256
 
 ![256x256](pics/tint256x256.png)
-![256x32][(pics/checkerboard256x32.png)
+![256x32](pics/checkerboard256x32.png)
 
 ## Hues
 
