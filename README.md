@@ -4,11 +4,13 @@
 
 ## 16x16
 
-![16x16](tint16x16.png)
+![16x16](pics/tint16x16.png)
+![32x4](pics/checkerboard32x4.png)
 
-## 1024x1024
+## 256x256
 
-![1024x1024](tint1024x1024.png)
+![256x256](pics/tint256x256.png)
+![256x32][(pics/checkerboard256x32.png)
 
 ## Hues
 
