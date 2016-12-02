@@ -37,30 +37,44 @@ hue: b    #0000FF #0000EF #0000DF #0000CF #0000BF #0000AF #00009F #00008F #00007
     #include "util_hsb.h"
     #include "util_tga.h"
 
-// ========================================================================
-int main( const int nArg, const char* aArg[] )
-{
-    const int W = 16;
-    const int H = 16;
 
+// ========================================================================
+void SaveTGA( int width, int height, void *pixels, size_t length, const char * filename )
+{
+    const bool  bSaved   = TGA_Save32( width, height, pixels, length, filename );
+    const char *pMessage = bSaved
+        ? "Wrote"
+        : "ERROR: Couldn't write"
+        ;
+    printf( "%s: '%s'\n", pMessage, filename );
+}
+
+
+// ========================================================================
+void MakeHues()
+{
     int x = 0;
     int y = 0;
+
+    const int W = 16;
+    const int H = 16;
     A8R8G8B8 pixels[ H ][ W ]; // [y][x]
 
     double nHue = 0.0;
-    double dHue = 1. / 12.;
+    double dHue = 1. / 12.; // 360/30 = 12 hues
 
     double nSat = 1.0;
 
     double nLit = 1.0;
-    double dLit = 1./16.;
+    double dLit = 1./16.; // Gradient: White -> Color -> Black
 
     int nShades = 16; // Pure black cut off
 
     A8R8G8B8 rgb;
     memset( pixels, 0, sizeof( pixels ) );
 
-    // Chromatic: White - Color - Black
+    // Chromatic: Gradient: White -> Color -> Black
+    nHue = 0.0;
     while (nHue < 1.)
     {
         printf( "Hue: %3.f  ", nHue * 360.0 );
@@ -88,7 +102,7 @@ int main( const int nArg, const char* aArg[] )
 
         printf( "\n" );
     }
- 
+
     // Monochromatic: White - Gray - Black
     printf( "Hue: mono " );
     {
@@ -121,7 +135,7 @@ int main( const int nArg, const char* aArg[] )
         if( nHue < 6*dHue ) printf( "hue: g    " );
         else
         if( nHue < 9*dHue ) printf( "hue: b    " );
-       
+
         y = 0;
         nLit = 0.5;
         for( int iShade = 0; iShade < nShades; iShade++ )
@@ -143,7 +157,7 @@ int main( const int nArg, const char* aArg[] )
         nHue += 4.0/12.0;
         x++;
     }
-    
+
     //      'Hue: 330  '
     printf( "          " );
 
@@ -156,16 +170,163 @@ int main( const int nArg, const char* aArg[] )
     }
     printf( "\n" );
 
-    const char *pFilename = "tint16x16.tga";
-    bool  bSaved;
+    SaveTGA( W, H, pixels, sizeof( pixels ), "tint16x16.tga" );
+}
 
-    bSaved = TGA_Save32( W, H, pixels, sizeof( pixels ), pFilename );
 
-    const char *pMessage = bSaved
-        ? "Wrote"
-        : "ERROR: Couldn't write"
-        ;
-    printf( "%s: '%s'\n", pMessage, pFilename );
+// ========================================================================
+void MakeCheckerboards()
+{
+    double nHue;
+    double nSat;
+    double nLit;
+
+    double dHue = 1. / 12.; // 360/30 = 12 hues
+
+    int x = 0;
+    int y = 0;
+
+    const int W = 32;
+    const int H =  4;
+    A8R8G8B8 checkerboard[ H ][ W ]; // [y][x]
+    A8R8G8B8 rgb;
+
+    memset( checkerboard, 0, sizeof( checkerboard ) );
+
+    // Checkerboard: Chromatic
+
+    nSat = 1.0;
+
+    for( nHue = 0.0, x = 0; x < 12; x++, nHue += dHue )
+    {
+        y = 0;
+        nLit = 0.5; // Primary
+
+        // Top 2 rows
+        rgb = HSL2RGB( nHue, nSat, 0.5 ); // Light
+        checkerboard[ y+0 ][ 2*x+0 ] = rgb;
+        checkerboard[ y+1 ][ 2*x+1 ] = rgb;
+
+        rgb = HSL2RGB( nHue, nSat, 2./3.* 0.5 ); // Dark // // HSB: Brightness = 66% -> HSL: Lightness: 33%
+        checkerboard[ y+0 ][ 2*x+1 ] = rgb;
+        checkerboard[ y+1 ][ 2*x+0 ] = rgb;
+
+        // Bottom 2 rows
+        rgb = HSL2RGB( nHue, nSat, 0.50 * 0.5 ); // Light
+        checkerboard[ y+2 ][ 2*x+0 ] = rgb;
+        checkerboard[ y+3 ][ 2*x+1 ] = rgb;
+
+        rgb = HSL2RGB( nHue, nSat, 1./3.* 0.5 ); // Dark
+        checkerboard[ y+2 ][ 2*x+1 ] = rgb;
+        checkerboard[ y+3 ][ 2*x+0 ] = rgb;
+    }
+
+    // Checkerboard: Monochromatic
+    nHue = 0.0; // Doesn't matter
+    nSat = 0.0; // Monochrome
+
+    /*
+        Checkoards  Steps   Delta (%)   Greys (%)
+        1           2       100         100, 0
+                    3        50         100,50     0
+        2           4        33         100,66    33, 0
+                    5        25         100,75    50,25     0
+        3           6        20         100,80    60,40    20, 0
+                    7        16.66      100,83    66,50    33,16    0
+        ~4          8        15         100,85    70,55    40,25   10, 0
+        4           8        14.28      100,~85  ~71,~57  ~42,~28 ~14, 0
+                    9        12.5       100,87.5  75,62.5  50,37.5 25,12.5  0
+        5           10
+        Delta = 1/(steps - 1)
+    */
+
+
+    // Top checkerboards: 4 or 2 look good
+    int    nTiles = 2;
+    double nSteps = nTiles * 2.0;
+    double dLit   = 1.0 / (nSteps - 1.0);
+
+    double checkerboardLite = 1.0; // Start white
+    double checkerboardDark ;
+
+    int colBeg = 12; // Start in Col 12
+    int colEnd = colBeg + nTiles;
+
+#if 1
+    for( x = colBeg; x < colEnd; x++ )
+    {
+        checkerboardDark = checkerboardLite - dLit;
+
+        // if darker than black then roll over to white for Black & White checkerboard
+        if( checkerboardDark < 0.0)
+            checkerboardDark = 1.0;
+
+        // Top checkerboards
+        rgb = HSL2RGB( 0.0, 0.0, checkerboardLite );
+        checkerboard[ y+0 ][ 2*x+0 ] = rgb;
+        checkerboard[ y+1 ][ 2*x+1 ] = rgb;
+
+        rgb = HSL2RGB( 0.0, 0.0, checkerboardDark );
+        checkerboard[ y+0 ][ 2*x+1 ] = rgb;
+        checkerboard[ y+1 ][ 2*x+0 ] = rgb;
+
+        checkerboardLite -= 2.0*dLit; // HSB: Brightness 2*B -> HSL: Lightness: B
+    }
+#endif
+
+    // Bot checkerboards: 3
+    y += 2;
+
+    nTiles = 3;
+    nSteps = nTiles * 2.0;
+    dLit   = 1.0 / (nSteps - 1.0);
+
+    checkerboardLite = 1.0; // Start white
+
+    colEnd = colBeg + nTiles;
+
+    for( x = colBeg; x < colEnd; x++ )
+    {
+        checkerboardDark = checkerboardLite - dLit;
+
+//printf( "[%d]  Delta: %5.4f  Lit: %5.3f  Dark: %5.3f\n", x - colBeg, dLit, checkerboardLite, checkerboardDark );
+
+        // Bot checkerboards
+        rgb = HSL2RGB( 0.0, 0.0, checkerboardLite );
+        checkerboard[ y+0 ][ 2*x+0 ] = rgb;
+        checkerboard[ y+1 ][ 2*x+1 ] = rgb;
+
+        rgb = HSL2RGB( 0.0, 0.0, checkerboardDark );
+        checkerboard[ y+0 ][ 2*x+1 ] = rgb;
+        checkerboard[ y+1 ][ 2*x+0 ] = rgb;
+
+        checkerboardLite -= 2.0*dLit;
+    }
+
+    // Black & White checkerboard
+    y -= 2;
+
+    checkerboardLite = 0.0;
+    checkerboardDark = 1.0;
+
+    rgb = HSL2RGB( 0.0, 0.0, checkerboardLite );
+    checkerboard[ y+0 ][ 2*x+0 ] = rgb;
+    checkerboard[ y+1 ][ 2*x+1 ] = rgb;
+
+    rgb = HSL2RGB( 0.0, 0.0, checkerboardDark );
+    checkerboard[ y+0 ][ 2*x+1 ] = rgb;
+    checkerboard[ y+1 ][ 2*x+0 ] = rgb;
+
+
+    SaveTGA( W, H, checkerboard, sizeof( checkerboard ), "checkerboard32x4.tga" );
+}
+
+
+// ========================================================================
+int main( const int nArg, const char* aArg[] )
+{
+    MakeHues();
+    MakeCheckerboards();
 
     return 0;
 }
