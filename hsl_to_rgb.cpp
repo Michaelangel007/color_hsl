@@ -307,8 +307,31 @@ void MakeCheckerboards()
         checkerboardLite -= 2.0*dLit;
     }
 
-    // Black & White checkerboard
+    // Brown checkboard: HSL = 0.07, S: 33%, B: 33%
+    nHue = 24./360.;
+
+    // Dark Brown
+    rgb = HSL2RGB( nHue, 1./3., 1./3.*0.5 );
+    checkerboard[ y+0 ][ 2*x+0 ] = rgb;
+    checkerboard[ y+1 ][ 2*x+1 ] = rgb;
+
+    rgb = HSL2RGB( nHue, 1./3., 1./3.*0.25 );
+    checkerboard[ y+0 ][ 2*x+1 ] = rgb;
+    checkerboard[ y+1 ][ 2*x+0 ] = rgb;
+
     y -= 2;
+
+    // Light Brown
+    rgb = HSL2RGB( nHue, 1./3., 1./3*2 );
+    checkerboard[ y+0 ][ 2*x+0 ] = rgb;
+    checkerboard[ y+1 ][ 2*x+1 ] = rgb;
+
+    rgb = HSL2RGB( nHue, 1./3., 1./3 );
+    checkerboard[ y+0 ][ 2*x+1 ] = rgb;
+    checkerboard[ y+1 ][ 2*x+0 ] = rgb;
+
+    // Black & White checkerboard
+    x--;
 
     checkerboardLite = 0.0;
     checkerboardDark = 1.0;
