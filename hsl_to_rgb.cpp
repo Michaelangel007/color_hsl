@@ -103,6 +103,30 @@ void MakeHues()
         printf( "\n" );
     }
 
+    // Brown
+    nHue = 24./360.;
+    printf( "Hue:brown " );
+    {
+        y = 0;
+        nLit = 1.0;
+        for( int iShade = 0; iShade < nShades; iShade++ )
+        {
+            rgb = HSL2RGB( nHue, 1./3., nLit );
+            pixels[ y ][ x ] = rgb;
+
+            printf( "#%02X%02X%02X "
+                , R8G8B8_R8( rgb )
+                , R8G8B8_G8( rgb )
+                , R8G8B8_B8( rgb )
+            );
+
+            y++;
+            nLit -= dLit;
+        }
+        printf( "\n" );
+    }
+    x++;
+
     // Monochromatic: White - Gray - Black
     printf( "Hue: mono " );
     {
@@ -126,6 +150,7 @@ void MakeHues()
     }
     x++;
 
+#if 0
     // Primary: Primary - Black
     nHue = 0.0;
     while (nHue < 1.)
@@ -157,6 +182,7 @@ void MakeHues()
         nHue += 4.0/12.0;
         x++;
     }
+#endif
 
     //      'Hue: 330  '
     printf( "          " );
@@ -245,7 +271,7 @@ void MakeCheckerboards()
     */
 
 
-    // Top checkerboards: 4 or 2 look good
+    // Checkerboard A - 4 grays
     int    nTiles = 2;
     double nSteps = nTiles * 2.0;
     double dLit   = 1.0 / (nSteps - 1.0);
@@ -253,11 +279,7 @@ void MakeCheckerboards()
     double checkerboardLite = 1.0; // Start white
     double checkerboardDark ;
 
-    int colBeg = 12; // Start in Col 12
-    int colEnd = colBeg + nTiles;
-
-#if 1
-    for( x = colBeg; x < colEnd; x++ )
+    for( int iTile = 0; iTile < nTiles; iTile++ )
     {
         checkerboardDark = checkerboardLite - dLit;
 
@@ -275,11 +297,13 @@ void MakeCheckerboards()
         checkerboard[ y+1 ][ 2*x+0 ] = rgb;
 
         checkerboardLite -= 2.0*dLit; // HSB: Brightness 2*B -> HSL: Lightness: B
-    }
-#endif
 
-    // Bot checkerboards: 3
-    y += 2;
+        y += 2;
+    }
+
+    // Checkerboard B - 6 grays
+    x++;
+    y = 0;
 
     nTiles = 3;
     nSteps = nTiles * 2.0;
@@ -287,9 +311,7 @@ void MakeCheckerboards()
 
     checkerboardLite = 1.0; // Start white
 
-    colEnd = colBeg + nTiles;
-
-    for( x = colBeg; x < colEnd; x++ )
+    for( int iTile = 0; iTile < nTiles; iTile++ )
     {
         checkerboardDark = checkerboardLite - dLit;
 
@@ -305,21 +327,31 @@ void MakeCheckerboards()
         checkerboard[ y+1 ][ 2*x+0 ] = rgb;
 
         checkerboardLite -= 2.0*dLit;
+
+        y += 2;
+        if( y >= H)
+        {
+            x++;
+            y = 0;
+        }
     }
 
-    // Brown checkboard: HSL = 0.07, S: 33%, B: 33%
-    nHue = 24./360.;
+    // Black & White checkerboard
+    checkerboardLite = 0.0;
+    checkerboardDark = 1.0;
 
-    // Dark Brown
-    rgb = HSL2RGB( nHue, 1./3., 1./3.*0.5 );
+    rgb = HSL2RGB( 0.0, 0.0, checkerboardLite );
     checkerboard[ y+0 ][ 2*x+0 ] = rgb;
     checkerboard[ y+1 ][ 2*x+1 ] = rgb;
 
-    rgb = HSL2RGB( nHue, 1./3., 1./3.*0.25 );
+    rgb = HSL2RGB( 0.0, 0.0, checkerboardDark );
     checkerboard[ y+0 ][ 2*x+1 ] = rgb;
     checkerboard[ y+1 ][ 2*x+0 ] = rgb;
 
-    y -= 2;
+    // Brown checkboard: HSL = 0.07, S: 33%, B: 33%
+    nHue = 24./360.;
+    x++;
+    y = 0;
 
     // Light Brown
     rgb = HSL2RGB( nHue, 1./3., 1./3*2 );
@@ -330,17 +362,14 @@ void MakeCheckerboards()
     checkerboard[ y+0 ][ 2*x+1 ] = rgb;
     checkerboard[ y+1 ][ 2*x+0 ] = rgb;
 
-    // Black & White checkerboard
-    x--;
+    y += 2;
 
-    checkerboardLite = 0.0;
-    checkerboardDark = 1.0;
-
-    rgb = HSL2RGB( 0.0, 0.0, checkerboardLite );
+    // Dark Brown
+    rgb = HSL2RGB( nHue, 1./3., 1./3.*0.5 );
     checkerboard[ y+0 ][ 2*x+0 ] = rgb;
     checkerboard[ y+1 ][ 2*x+1 ] = rgb;
 
-    rgb = HSL2RGB( 0.0, 0.0, checkerboardDark );
+    rgb = HSL2RGB( nHue, 1./3., 1./3.*0.25 );
     checkerboard[ y+0 ][ 2*x+1 ] = rgb;
     checkerboard[ y+1 ][ 2*x+0 ] = rgb;
 
