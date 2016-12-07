@@ -11,6 +11,7 @@
 
 ![256x256](pics/tint256x256.png)
 ![256x32 sharp](pics/checkerboard256x32_sharp.png)
+![256x32 smooth](pics/checkerboard256x32_smooth.png)
 
 ## Hues
 
