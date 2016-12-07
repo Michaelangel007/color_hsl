@@ -1,6 +1,6 @@
 # HSL to RGB
 
-12 Hues + Monochrome + Primaries
+12 Hues + Brown + Monochrome
 
 ## 16x16
 
