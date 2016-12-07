@@ -16,6 +16,7 @@
 
 |       0°|      30°|      60°|      90°|     120°|     150°|     180°|     210°|     240°|     270°|     300°|     330°|
 |--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|
+| Red     | Orange  | Yellow  |Chartreuse|Green   | Spring  | Azure   | Cyan    | Blue    | Violet  | Magenta | Rose    |
 |`#FFFFFF`|`#FFFFFF`|`#FFFFFF`|`#FFFFFF`|`#FFFFFF`|`#FFFFFF`|`#FFFFFF`|`#FFFFFF`|`#FFFFFF`|`#FFFFFF`|`#FFFFFF`|`#FFFFFF`|
 |`#FFDFDF`|`#FFEFDF`|`#FFFFDF`|`#EFFFDF`|`#DFFFDF`|`#DFFFEF`|`#DFFFFF`|`#DFEFFF`|`#DFDFFF`|`#EFDFFF`|`#FFDFFF`|`#FFDFEF`|
 |`#FFBFBF`|`#FFDFBF`|`#FFFFBF`|`#DFFFBF`|`#BFFFBF`|`#BFFFDF`|`#BFFFFF`|`#BFDFFF`|`#BFBFFF`|`#DFBFFF`|`#FFBFFF`|`#FFBFDF`|
@@ -33,6 +34,11 @@
 |`#3F0000`|`#3F1F00`|`#3F3F00`|`#1F3F00`|`#003F00`|`#003F1F`|`#003F3F`|`#001F3F`|`#00003F`|`#1F003F`|`#3F003F`|`#3F001F`|
 |`#1F0000`|`#1F0F00`|`#1F1F00`|`#0F1F00`|`#001F00`|`#001F0F`|`#001F1F`|`#000F1F`|`#00001F`|`#0F001F`|`#1F001F`|`#1F000F`|
 |`#000000`|`#000000`|`#000000`|`#000000`|`#000000`|`#000000`|`#000000`|`#000000`|`#000000`|`#000000`|`#000000`|`#000000`|
+| Red     | Orange  | Yellow  |Chartreuse|Green   | Spring  | Azure   | Cyan    | Blue    | Violet  | Magenta | Rose    |
+
+Note:
+
+* Brown is 24°
 
 ## Monochrome
 
