@@ -2,16 +2,21 @@
 
 12 Hues + Brown + Monochrome
 
-## 16x16
+## 16x16 and 32x4
 
 ![16x16](pics/tint16x16.png)
 ![32x4](pics/checkerboard32x4.png)
 
-## 256x256
+## 256x256 (upscaled 16x16) and 256x32
 
 ![256x256](pics/tint256x256.png)
 ![256x32 sharp](pics/checkerboard256x32_sharp.png)
 ![256x32 smooth](pics/checkerboard256x32_smooth.png)
+
+## 272x272 (upscaled 17x17)
+
+![272x272 sharp](pics/tint272x272_sharp.png)
+![272x272 smooth](pics/tint272x272_smooth.png)
 
 ## Hues
 

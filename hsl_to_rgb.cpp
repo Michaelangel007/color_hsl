@@ -2,9 +2,10 @@
 By: Michael "Code Poet" Pohoreski, aka, Michaelangel007
 Copyright: (C) Copyleft 2016
 
-Generate 16x16 TGA image:   tint16x16.tga
+Generate 16x16 Targa image:   tint16x16.tga
+Generate 32x 4 Targe image:   checkerboard32x4.tga
 
-* 12 columns of colors (17 steps but last color <0,0,0> is omitted)
+* 12 columns of colors (17 steps but last color <0,0,0> is omitted unless -k)
 * Gray scale
 * Primary Red, Green, Blue (17 steps, again last color is omitted)
 
@@ -50,14 +51,21 @@ void SaveTGA( int width, int height, void *pixels, size_t length, const char * f
 }
 
 
+// Size  Image
+// 0     16x16
+// 1     17x17
+// 2     32x32
+// 3     33x33
 // ========================================================================
-void MakeHues()
+void MakeHues( int Size = 0 )
 {
     int x = 0;
     int y = 0;
 
-    const int W = 16;
-    const int H = 16;
+    const int S = ((Size >> 1) & 1) + 1;
+
+    const int W =   16 + (Size & 1);
+    const int H = S*16 + (Size & 1);
     A8R8G8B8 pixels[ H ][ W ]; // [y][x]
 
     double nHue = 0.0;
@@ -66,9 +74,11 @@ void MakeHues()
     double nSat = 1.0;
 
     double nLit = 1.0;
-    double dLit = 1./16.; // Gradient: White -> Color -> Black
+    double dLit = 1./(S*16.); // Gradient: White -> Color -> Black
 
-    int nShades = 16; // Pure black cut off
+    int nShades = S*16 + (Size & 1); // Pure black cut off
+
+//return printf( "Size: %d -> %d x %d, Size: %d, Shades: %d\n", Size, W, H, S, nShades );
 
     A8R8G8B8 rgb;
     memset( pixels, 0, sizeof( pixels ) );
@@ -150,39 +160,40 @@ void MakeHues()
     }
     x++;
 
-#if 0
-    // Primary: Primary - Black
-    nHue = 0.0;
-    while (nHue < 1.)
+    if( Size & 1 )
     {
-        if( nHue < 3*dHue ) printf( "Hue: r    " );
-        else
-        if( nHue < 6*dHue ) printf( "hue: g    " );
-        else
-        if( nHue < 9*dHue ) printf( "hue: b    " );
-
-        y = 0;
-        nLit = 0.5;
-        for( int iShade = 0; iShade < nShades; iShade++ )
+        // Primary: Primary - Black
+        nHue = 0.0;
+        while (nHue < 1.)
         {
-            rgb = HSL2RGB( nHue, 1.0, nLit );
-            pixels[ y ][ x ] = rgb;
+            if( nHue < 3*dHue ) printf( "Hue: r    " );
+            else
+            if( nHue < 6*dHue ) printf( "hue: g    " );
+            else
+            if( nHue < 9*dHue ) printf( "hue: b    " );
 
-            printf( "#%02X%02X%02X "
-                , R8G8B8_R8( rgb )
-                , R8G8B8_G8( rgb )
-                , R8G8B8_B8( rgb )
-            );
+            y = 0;
+            nLit = 0.5;
+            for( int iShade = 0; iShade < nShades; iShade++ )
+            {
+                rgb = HSL2RGB( nHue, 1.0, nLit );
+                pixels[ y ][ x ] = rgb;
 
-            y++;
-            nLit -= (dLit / 2.0);
+                printf( "#%02X%02X%02X "
+                    , R8G8B8_R8( rgb )
+                    , R8G8B8_G8( rgb )
+                    , R8G8B8_B8( rgb )
+                );
+
+                y++;
+                nLit -= (dLit / 2.0);
+            }
+            printf( "\n" );
+
+            nHue += 4.0/12.0;
+            x++;
         }
-        printf( "\n" );
-
-        nHue += 4.0/12.0;
-        x++;
     }
-#endif
 
     //      'Hue: 330  '
     printf( "          " );
@@ -196,7 +207,9 @@ void MakeHues()
     }
     printf( "\n" );
 
-    SaveTGA( W, H, pixels, sizeof( pixels ), "tint16x16.tga" );
+    char filename[ 32 ];
+    sprintf( filename, "tint%dx%d.tga", W, H );
+    SaveTGA( W, H, pixels, sizeof( pixels ), filename );
 }
 
 
@@ -379,9 +392,39 @@ void MakeCheckerboards()
 
 
 // ========================================================================
+int Usage()
+{
+    return printf(
+        "Usage: [option]\n"
+        "\n"
+        "  -0  16x16 Hues (15 shades) + Brown + Grey      \n"
+        "  -1  17x16 Hues (15 shades) + Brown + Grey + RGB\n"
+        "  -2  16x32 Hues (31 shades) + Brown + Grey      \n"
+        "  -3  17x33 Hues (31 shades) + Brown + Grey + RGB\n"
+        "  -?  Display help                               \n"
+    );
+}
+
+// ========================================================================
 int main( const int nArg, const char* aArg[] )
 {
-    MakeHues();
+    int odd = 0;
+
+    if( nArg > 1 )
+        if( aArg[1][0] == '-')
+        {
+            const char p = aArg[1][1];
+            if( p == 'k' )
+                odd = 1; // include bottom black row
+            else
+            if((p >= '0' )
+            && (p <= '3' ))
+                odd = aArg[1][1] - '0';
+            else
+                return Usage();
+        }
+   
+    MakeHues( odd );
     MakeCheckerboards();
 
     return 0;
