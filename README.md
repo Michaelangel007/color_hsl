@@ -46,10 +46,10 @@ Notes:
 
 * Brown is 24°
 
-* https://en.wikipedia.org/wiki/Chartreuse_(color) (90°)
-* https://en.wikipedia.org/wiki/Azure_(color) (210°)
-* https://en.wikipedia.org/wiki/Violet_(color) (270°)
-* https://en.wikipedia.org/wiki/Rose_(color)  (330°)
+* [ 90° name](https://en.wikipedia.org/wiki/Chartreuse_(color\))
+* [210° name](https://en.wikipedia.org/wiki/Azure_(color\))
+* [270° name](https://en.wikipedia.org/wiki/Violet_(color\))
+* [330° name](https://en.wikipedia.org/wiki/Rose_(color\))
 
 ## Monochrome
 
