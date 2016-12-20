@@ -42,9 +42,14 @@
 |`#000000`|`#000000`|`#000000`|`#000000`|`#000000`|`#000000`|`#000000`|`#000000`|`#000000`|`#000000`|`#000000`|`#000000`|
 | Red     | Orange  | Yellow  |Chartreuse|Green   | Spring  | Cyan    | Azure   | Blue    | Violet  | Magenta | Rose    |
 
-Note:
+Notes:
 
 * Brown is 24°
+
+* https://en.wikipedia.org/wiki/Chartreuse_(color) (90°)
+* https://en.wikipedia.org/wiki/Azure_(color) (210°)
+* https://en.wikipedia.org/wiki/Violet_(color) (270°)
+* https://en.wikipedia.org/wiki/Rose_(color)  (330°)
 
 ## Monochrome
 
